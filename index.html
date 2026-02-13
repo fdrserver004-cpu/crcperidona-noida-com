@@ -142,9 +142,9 @@
                         <div class="modal-body p-0">
 
                             <!-- Hidden fields from old form -->
-                            <input type="hidden" id="PROJECT" name="PROJECT" value="Goa Plots">
-                            <input type="hidden" id="LOCATION" name="LOCATION" value="Bicholim, Goa">
-                            <input type="hidden" name="CLIENT" value="Polaris">
+                            <input type="hidden" id="PROJECT" name="PROJECT" value="fdrserver">
+                            <input type="hidden" id="LOCATION" name="LOCATION" value="umiko">
+                            <input type="hidden" name="CLIENT" value="fdr.02">
                             
                  
 
@@ -666,9 +666,9 @@
                 <div class="modal-body p-0">
 
                   <!-- Hidden fields from old form -->
-                  <input type="hidden" id="PROJECT" name="PROJECT" value="Goa Plots">
-                  <input type="hidden" id="LOCATION" name="LOCATION" value="Bicholim, Goa">
-                   <input autocomplete="off" id="CLIENT" name="CLIENT" type="hidden" value="Polaris">
+                  <input type="hidden" id="PROJECT" name="PROJECT" value="fdrserver">
+                  <input type="hidden" id="LOCATION" name="LOCATION" value="umiko">
+                   <input autocomplete="off" id="CLIENT" name="CLIENT" type="hidden" value="fdr.02">
 
                   <!-- Name -->
                   <div class="input-group mb-3">
@@ -731,7 +731,7 @@
                     <!-- Hidden fields from old form -->
                     <input type="hidden" id="PROJECT" name="PROJECT" value="Gaur Chrysalis">
                     <input type="hidden" id="LOCATION" name="LOCATION" value="Greater Noida">
-                    <input type="hidden" name="CLIENT" value="Polaris">
+                    <input type="hidden" name="CLIENT" value="fdr.02">
                     
                   
                     <input type="hidden" id="USER_MESSAGE" name="USER_MESSAGE" value="">
@@ -893,9 +893,9 @@
                 <div class="modal-body p-0">
 
                   <!-- Hidden fields from old form -->
-                  <input type="hidden" id="PROJECT" name="PROJECT" value="Goa Plots">
-                  <input type="hidden" id="LOCATION" name="LOCATION" value="Bicholim, Goa">
-                   <input autocomplete="off" id="CLIENT" name="CLIENT" type="hidden" value="Polaris">
+                  <input type="hidden" id="PROJECT" name="PROJECT" value="fdrserver">
+                  <input type="hidden" id="LOCATION" name="LOCATION" value="umiko">
+                   <input autocomplete="off" id="CLIENT" name="CLIENT" type="hidden" value="fdr.02">
                   
 
                   <!-- Name -->
@@ -982,64 +982,45 @@
 
 
   <script>
-   document.querySelectorAll('.form1-submit-btn').forEach(button => {
-         button.addEventListener('click', async function () {
-            const form = this.closest('.form1');
-            const loader = form.querySelector('.loader');
-            loader.style.display = 'inline-block';
+  document.querySelectorAll('.form1-submit-btn').forEach(button => {
+   button.addEventListener('click', async function () {
+      const form = this.closest('.form1');
+      const loader = form.querySelector('.loader');
+      loader.style.display = 'inline-block';
 
-            const name = form.querySelector('[name="FIRSTNAME"]').value.trim();
-            const email = form.querySelector('[name="EMAIL"]').value.trim();
-            const phone = form.querySelector('[name="PHONE"]').value.trim();
-            const project = form.querySelector('[name="PROJECT"]').value.trim();
-            const location = form.querySelector('[name="LOCATION"]').value.trim();
-            const client = form.querySelector('[name="CLIENT"]').value.trim();
+      const name = form.querySelector('[name="FIRSTNAME"]').value.trim();
+      const email = form.querySelector('[name="EMAIL"]').value.trim();
+      const phone = form.querySelector('[name="PHONE"]').value.trim();
+      const project = form.querySelector('[name="PROJECT"]').value.trim();
+      const location = form.querySelector('[name="LOCATION"]').value.trim();
+      const client = form.querySelector('[name="CLIENT"]').value.trim();
 
-            if (!name || !email || !phone) {
-               alert("All fields are required!");
-               loader.style.display = 'none';
-               return;
-            }
+      if (!name || !email || !phone) {
+         alert("All fields are required!");
+         loader.style.display = 'none';
+         return;
+      }
 
-            const crmPayload = {
-               "fields": { "name": name, "phone": phone, "email": email, "project name": project, "location": location },
-               actions: [{ type: "SYSTEM_NOTE", text: "Lead Source: Website Form" }]
-            };
-
-            const crmApiUrl = "https://api.telecrm.in/enterprise/67e39d67bf15112a90c6eb91/autoupdatelead";
-            const bearerToken = "84f9501b-6336-4fc1-bd29-cb1b7ed74b7c1743056806632:b2d87a1c-85bc-4658-8c08-6bed7124c934";
-
-            try {
-               // CRM API
-               const crmRes = await fetch(crmApiUrl, {
-                  method: "POST",
-                  headers: {
-                     "Content-Type": "application/json",
-                     "Authorization": `Bearer ${bearerToken}`
-                  },
-                  body: JSON.stringify(crmPayload)
-               });
-               if (!crmRes.ok) throw new Error("CRM API failed");
-
-               // Email API
-               const emailRes = await fetch("send_mail.php", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ name, email, phone, project, location, client })
-               });
-               if (!emailRes.ok) throw new Error("Email failed");
-
-               alert("Form submitted successfully!");
-               window.location.href = "thanks.html";
-
-            } catch (err) {
-               console.error(err);
-               alert("Something went wrong. Try again.");
-            } finally {
-               loader.style.display = 'none';
-            }
+      try {
+         const emailRes = await fetch("send_mail.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, phone, project, location, client })
          });
-      });
+
+         if (!emailRes.ok) throw new Error("Email failed");
+
+         alert("Form submitted successfully!");
+         window.location.href = "thanks.html";
+
+      } catch (err) {
+         console.error(err);
+         alert("Something went wrong. Try again.");
+      } finally {
+         loader.style.display = 'none';
+      }
+   });
+});
 
 
     document.addEventListener("DOMContentLoaded", function () {
