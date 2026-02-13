@@ -982,44 +982,49 @@
 
 
   <script>
-  document.querySelectorAll('.form1-submit-btn').forEach(button => {
-   button.addEventListener('click', async function () {
-      const form = this.closest('.form1');
-      const loader = form.querySelector('.loader');
-      loader.style.display = 'inline-block';
+ document.querySelectorAll('.form1').forEach(form => {
 
-      const name = form.querySelector('[name="FIRSTNAME"]').value.trim();
-      const email = form.querySelector('[name="EMAIL"]').value.trim();
-      const phone = form.querySelector('[name="PHONE"]').value.trim();
-      const project = form.querySelector('[name="PROJECT"]').value.trim();
-      const location = form.querySelector('[name="LOCATION"]').value.trim();
-      const client = form.querySelector('[name="CLIENT"]').value.trim();
+  form.addEventListener('submit', async function (e) {
 
-      if (!name || !email || !phone) {
-         alert("All fields are required!");
-         loader.style.display = 'none';
-         return;
-      }
+    e.preventDefault(); // 🔥 THIS IS IMPORTANT
 
-      try {
-         const emailRes = await fetch("send_mail.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, phone, project, location, client })
-         });
+    const loader = form.querySelector('.loader');
+    if (loader) loader.style.display = 'inline-block';
 
-         if (!emailRes.ok) throw new Error("Email failed");
+    const name = form.querySelector('[name="FIRSTNAME"]').value.trim();
+    const email = form.querySelector('[name="EMAIL"]').value.trim();
+    const phone = form.querySelector('[name="PHONE"]').value.trim();
+    const project = form.querySelector('[name="PROJECT"]').value.trim();
+    const location = form.querySelector('[name="LOCATION"]').value.trim();
+    const client = form.querySelector('[name="CLIENT"]').value.trim();
 
-         alert("Form submitted successfully!");
-         window.location.href = "thanks.html";
+    if (!name || !email || !phone) {
+      alert("All fields are required!");
+      if (loader) loader.style.display = 'none';
+      return;
+    }
 
-      } catch (err) {
-         console.error(err);
-         alert("Something went wrong. Try again.");
-      } finally {
-         loader.style.display = 'none';
-      }
-   });
+    try {
+      const emailRes = await fetch("send_mail.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, project, location, client })
+      });
+
+      if (!emailRes.ok) throw new Error("Email failed");
+
+      alert("Form submitted successfully!");
+      window.location.href = "thanks.html";
+
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Try again.");
+    } finally {
+      if (loader) loader.style.display = 'none';
+    }
+
+  });
+
 });
 
 
